@@ -79,12 +79,7 @@ public class JetPackPlayer : MonoBehaviour
         //Updates the states of all the inputs the character can do
         // !! Inputs must be modified in Project Settings -> Input Manager !!
         rightJet = Input.GetButton("RightJet");
-        //rightJetUp = Input.GetButtonUp("RightJet");
-        //rightJetDown = Input.GetButtonDown("RightJet");
-
         leftJet = Input.GetButton("LeftJet");
-        //leftJetUp = Input.GetButtonUp("LeftJet");
-        //leftJetDown = Input.GetButtonDown("LeftJet");
         pumpActionDown = Input.GetButtonDown("PumpAction");
         revEngineDown = Input.GetButtonDown("RevEngine");
 
