@@ -853,7 +853,12 @@ PrefabInstance:
     - target: {fileID: 5607354558011722773, guid: dc15013fded398a4a87b75f6de9cee02,
         type: 3}
       propertyPath: lerpForce
-      value: 4
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5607354558011722773, guid: dc15013fded398a4a87b75f6de9cee02,
+        type: 3}
+      propertyPath: offsetCam
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dc15013fded398a4a87b75f6de9cee02, type: 3}
@@ -864,110 +869,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 231008358603598612, guid: 72330141854f4fc4dae31b1295ea44b8,
+    - target: {fileID: 2602511373530061290, guid: 72330141854f4fc4dae31b1295ea44b8,
         type: 3}
-      propertyPath: m_Mass
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 231008358603598612, guid: 72330141854f4fc4dae31b1295ea44b8,
-        type: 3}
-      propertyPath: m_LinearDrag
-      value: 0.3
-      objectReference: {fileID: 0}
-    - target: {fileID: 231008358603598612, guid: 72330141854f4fc4dae31b1295ea44b8,
-        type: 3}
-      propertyPath: m_Constraints
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 231008358603598612, guid: 72330141854f4fc4dae31b1295ea44b8,
-        type: 3}
-      propertyPath: m_Interpolate
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3107165066265933678, guid: 72330141854f4fc4dae31b1295ea44b8,
-        type: 3}
-      propertyPath: playOnAwake
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3107165066265933678, guid: 72330141854f4fc4dae31b1295ea44b8,
-        type: 3}
-      propertyPath: InitialModule.startColor.maxColor.r
-      value: 0.75086683
-      objectReference: {fileID: 0}
-    - target: {fileID: 3107165066265933678, guid: 72330141854f4fc4dae31b1295ea44b8,
-        type: 3}
-      propertyPath: InitialModule.startColor.maxColor.g
-      value: 0.6868548
-      objectReference: {fileID: 0}
-    - target: {fileID: 3107165066265933678, guid: 72330141854f4fc4dae31b1295ea44b8,
-        type: 3}
-      propertyPath: InitialModule.startColor.maxColor.b
-      value: 0.990566
-      objectReference: {fileID: 0}
-    - target: {fileID: 3234028665868316742, guid: 72330141854f4fc4dae31b1295ea44b8,
-        type: 3}
-      propertyPath: playOnAwake
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3234028665868316742, guid: 72330141854f4fc4dae31b1295ea44b8,
-        type: 3}
-      propertyPath: InitialModule.startColor.maxColor.r
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3234028665868316742, guid: 72330141854f4fc4dae31b1295ea44b8,
-        type: 3}
-      propertyPath: InitialModule.startColor.maxColor.g
-      value: 0.99781144
-      objectReference: {fileID: 0}
-    - target: {fileID: 3234028665868316742, guid: 72330141854f4fc4dae31b1295ea44b8,
-        type: 3}
-      propertyPath: InitialModule.startColor.maxColor.b
-      value: 0.5613208
-      objectReference: {fileID: 0}
-    - target: {fileID: 4527398013801376629, guid: 72330141854f4fc4dae31b1295ea44b8,
-        type: 3}
-      propertyPath: playOnAwake
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4527398013801376629, guid: 72330141854f4fc4dae31b1295ea44b8,
-        type: 3}
-      propertyPath: InitialModule.startColor.maxColor.r
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4527398013801376629, guid: 72330141854f4fc4dae31b1295ea44b8,
-        type: 3}
-      propertyPath: InitialModule.startColor.maxColor.g
-      value: 0.99781144
-      objectReference: {fileID: 0}
-    - target: {fileID: 4527398013801376629, guid: 72330141854f4fc4dae31b1295ea44b8,
-        type: 3}
-      propertyPath: InitialModule.startColor.maxColor.b
-      value: 0.5613208
-      objectReference: {fileID: 0}
-    - target: {fileID: 4832289437137207652, guid: 72330141854f4fc4dae31b1295ea44b8,
-        type: 3}
-      propertyPath: playOnAwake
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5312666213099369049, guid: 72330141854f4fc4dae31b1295ea44b8,
-        type: 3}
-      propertyPath: playOnAwake
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5312666213099369049, guid: 72330141854f4fc4dae31b1295ea44b8,
-        type: 3}
-      propertyPath: InitialModule.startColor.maxColor.r
-      value: 0.75086683
-      objectReference: {fileID: 0}
-    - target: {fileID: 5312666213099369049, guid: 72330141854f4fc4dae31b1295ea44b8,
-        type: 3}
-      propertyPath: InitialModule.startColor.maxColor.g
-      value: 0.6868548
-      objectReference: {fileID: 0}
-    - target: {fileID: 5312666213099369049, guid: 72330141854f4fc4dae31b1295ea44b8,
-        type: 3}
-      propertyPath: InitialModule.startColor.maxColor.b
-      value: 0.990566
+      propertyPath: m_Name
+      value: Eff_Reving
       objectReference: {fileID: 0}
     - target: {fileID: 6074579024244566020, guid: 72330141854f4fc4dae31b1295ea44b8,
         type: 3}
@@ -1026,33 +931,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6074579024244566024, guid: 72330141854f4fc4dae31b1295ea44b8,
         type: 3}
-      propertyPath: speedCapY
-      value: 7.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6074579024244566024, guid: 72330141854f4fc4dae31b1295ea44b8,
-        type: 3}
-      propertyPath: speedCapX
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6074579024244566024, guid: 72330141854f4fc4dae31b1295ea44b8,
-        type: 3}
-      propertyPath: floatCap
-      value: 10
+      propertyPath: hitTaken
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6074579024244566025, guid: 72330141854f4fc4dae31b1295ea44b8,
         type: 3}
       propertyPath: m_Name
       value: Player
-      objectReference: {fileID: 0}
-    - target: {fileID: 7503741853798983927, guid: 72330141854f4fc4dae31b1295ea44b8,
-        type: 3}
-      propertyPath: m_Name
-      value: Eff_Packu2
-      objectReference: {fileID: 0}
-    - target: {fileID: 8655224692735211346, guid: 72330141854f4fc4dae31b1295ea44b8,
-        type: 3}
-      propertyPath: m_Name
-      value: Eff_Packu1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 72330141854f4fc4dae31b1295ea44b8, type: 3}

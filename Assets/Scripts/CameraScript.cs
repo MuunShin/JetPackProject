@@ -29,11 +29,17 @@ public class CameraScript : MonoBehaviour
     [Tooltip("Target of the Camera")]
     GameObject target;
 
+    JetPackPlayer targetPlayer;
+
     [SerializeField]
     [Tooltip("Target of the Camera")]
     float lerpForce;
 
-    float targetX ,targetY ,cameraX ,cameraY;
+    [SerializeField]
+    [Tooltip("Offset for when your player is rising or falling")]
+    float offsetCam;
+
+    float targetX ,targetY ,cameraX ,cameraY, maxVeloY;
 
     //------------------------//
     //       Functions        //
@@ -43,16 +49,18 @@ public class CameraScript : MonoBehaviour
     void Start()
     {
         activeCamera = GetComponent<Camera>();
-        float targetX = target.transform.position.x;
-        float targetY = target.transform.position.y;
-        float cameraX = activeCamera.transform.position.x;
-        float cameraY = activeCamera.transform.position.y;
+        targetPlayer = target.GetComponent<JetPackPlayer>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        switch(CameraMode)
+        targetX = target.transform.position.x;
+        targetY = target.transform.position.y;
+        cameraX = activeCamera.transform.position.x;
+        cameraY = activeCamera.transform.position.y;
+
+        switch (CameraMode)
         {
             case CameraModes.CenterLerp : CenterLerpUpdate(); break;
             case CameraModes.MarioLike: MarioLikeUpdate(); break;
@@ -62,20 +70,25 @@ public class CameraScript : MonoBehaviour
 
     void CenterLerpUpdate()
     {
-        float targetX = target.transform.position.x;
-        float targetY = target.transform.position.y;
-        float cameraX = activeCamera.transform.position.x;
-        float cameraY = activeCamera.transform.position.y;
+        
+
+        if (targetPlayer.Rising())
+        {
+
+            Debug.Log(" Y+");
+            targetY = targetY + targetPlayer.rbVelocityY() - (targetPlayer.speedCapY / offsetCam);
+        }
+        if (targetPlayer.Falling())
+        {
+
+            Debug.Log(" Gravity");
+            targetY = targetY + targetPlayer.rbVelocityY() + (targetPlayer.floatCap / offsetCam);
+        }
 
         activeCamera.transform.position = new Vector3 (Mathf.Lerp(cameraX,targetX,lerpForce*Time.deltaTime), Mathf.Lerp(cameraY, targetY, lerpForce*Time.deltaTime), activeCamera.transform.position.z);
     }
     void MarioLikeUpdate()
     {
-        float targetX = target.transform.position.x;
-        float targetY = target.transform.position.y;
-        float cameraX = activeCamera.transform.position.x;
-        float cameraY = activeCamera.transform.position.y;
-
 
     }
 

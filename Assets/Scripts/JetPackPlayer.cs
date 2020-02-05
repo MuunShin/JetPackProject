@@ -25,20 +25,21 @@ public class JetPackPlayer : MonoBehaviour
     Rigidbody2D rb_;
 
     //Particles System
-    ParticleSystem effRightPack, effLeftPack, effUpPack;
+    ParticleSystem effRightPack, effLeftPack, effUpPack, effReving, effRev, effEngineOn;
     bool firstUp, firstRight, firstLeft;
 
-    //GamePlay Variables
+
+    //Mouvement Variables
     [Header("Mouvement")]
     [Tooltip("Upward vertical speed cap")]
     [SerializeField]
-    float speedCapY;
+    public float speedCapY;
     [SerializeField]
     [Tooltip("Horizontal speed cap")]
-    float speedCapX;
+    public float speedCapX;
     [SerializeField]
     [Tooltip("How the jectpack is affected by gravity ( 0 makes it float)")]
-    float floatCap;
+    public float floatCap;
     [SerializeField]
     [Tooltip("The force applied horizontally")]
     float accelerationX;
@@ -49,8 +50,20 @@ public class JetPackPlayer : MonoBehaviour
     [Tooltip("The force applied upwards when both buttons are pressed")]
     float accelerationUp;
 
+    [Header("Gameplay ")]
+    [Tooltip("Time to rev consecutively the engine")]
+    [SerializeField]
+    float revWindow;
+    [SerializeField]
+    float hitTaken;
+    //Gameplay boolean
+    bool engineUp,  reving;
 
+    float revNumber, revTimer;
 
+    [Tooltip("Must be the same as the camera")]
+    [SerializeField]
+    float offsetCam;
     //------------------------//
     //       Functions        //
     //------------------------//
@@ -62,7 +75,10 @@ public class JetPackPlayer : MonoBehaviour
         effRightPack = GameObject.Find("Eff_PackR").GetComponent<ParticleSystem>();
         effLeftPack = GameObject.Find("Eff_PackL").GetComponent<ParticleSystem>();
         effUpPack = GameObject.Find("Eff_PackUP").GetComponent<ParticleSystem>();
-
+        effReving = GameObject.Find("Eff_Reving").GetComponent<ParticleSystem>();
+        effRev = GameObject.Find("Eff_Rev").GetComponent<ParticleSystem>();
+        effEngineOn = GameObject.Find("Eff_EngineOn").GetComponent<ParticleSystem>();
+        engineUp = false;
     }
 
     // Update is called once per frame
@@ -70,6 +86,8 @@ public class JetPackPlayer : MonoBehaviour
     {
         InputUpdate();
         CapSpeed();
+
+        if(reving) { EngineRevUpdate(); }
     }
 
     // Function InputUpdate
@@ -86,10 +104,13 @@ public class JetPackPlayer : MonoBehaviour
 
         //--Jet pack controls--
 
-        if (rightJet && leftJet) { UpPackAction(); }
-        else if (rightJet) { RightPackAction(); }
-        else if (leftJet) { LeftPackAction(); }
-        else { StopJetParticle(); }
+        if (engineUp)
+        {
+            if (rightJet && leftJet) { UpPackAction(); }
+            else if (rightJet) { RightPackAction(); }
+            else if (leftJet) { LeftPackAction(); }
+            else { StopJetParticle(); }
+        }
 
         //--Pump control--
 
@@ -149,6 +170,8 @@ public class JetPackPlayer : MonoBehaviour
         rb_.AddForce(new Vector2(0, accelerationUp));
     }
 
+    // Function StopJetParticle()
+    // Stops all jet particles emmiter and resets booleans associated to them
     void StopJetParticle()
     {
         if (!firstRight || !firstLeft || !firstUp)
@@ -172,7 +195,38 @@ public class JetPackPlayer : MonoBehaviour
     // Manage what does the character when the player uses his engine input
     void EngineRevAction()
     {
-        Debug.Log(" VROUMMMbububububu ! ");
+        if (!engineUp)
+        { 
+            if (!reving)
+            {
+                effReving.Play();
+                revNumber = 0;
+                reving = true;
+            }
+            revTimer = revWindow;
+            revNumber++;
+            effRev.Play();
+
+            if (revNumber - hitTaken == 1)
+            {
+                effEngineOn.Play();
+                effReving.Stop();
+                engineUp = true;
+                reving = false;
+            }
+        }
+    }
+
+    void EngineRevUpdate()
+    {
+        revTimer -= Time.deltaTime;
+        if(revTimer <= 0)
+        {
+            effReving.Stop();
+            Debug.Log(revTimer);
+            reving = false;
+            revNumber = 0;
+        }
     }
 
     void CapSpeed()
@@ -184,30 +238,49 @@ public class JetPackPlayer : MonoBehaviour
         {
             ySpeed = speedCapY;
 
-            Debug.Log(" Capcap Y+");
+
         }
 
         if (ySpeed < -floatCap)
         {
             ySpeed = -floatCap;
 
-            Debug.Log(" Gravity Cap");
+            
         }
 
         if (xSpeed > speedCapX)
         {
             xSpeed = speedCapX;
 
-            Debug.Log(" Capcap x+ ");
+            
         }
         else if (xSpeed < -speedCapX)
         {
             xSpeed = -speedCapX;
 
-            Debug.Log(" Capcap x-");
+
         }
 
         rb_.velocity = new Vector2(xSpeed, ySpeed);
 
     }
+
+    public bool Rising()
+    {
+        
+        return (rb_.velocity.y > speedCapY / offsetCam);
+    }
+
+    public bool Falling()
+    {
+        Debug.Log(offsetCam);
+        return (rb_.velocity.y < -(floatCap / offsetCam));
+
+    }
+
+    public float rbVelocityY()
+    {
+        return rb_.velocity.y;
+    }
+
 }
