@@ -81,6 +81,7 @@ public class JetPackPlayer : MonoBehaviour
         engineUp = false;
     }
 
+
     // Update is called once per frame
     void Update()
     {
@@ -90,6 +91,10 @@ public class JetPackPlayer : MonoBehaviour
         if(reving) { EngineRevUpdate(); }
     }
 
+    private void FixedUpdate()
+    {
+        PackUpdate();
+    }
     // Function InputUpdate
     // !Called in Update!  Manage inputs related to the player
     void InputUpdate()
@@ -104,13 +109,7 @@ public class JetPackPlayer : MonoBehaviour
 
         //--Jet pack controls--
 
-        if (engineUp)
-        {
-            if (rightJet && leftJet) { UpPackAction(); }
-            else if (rightJet) { RightPackAction(); }
-            else if (leftJet) { LeftPackAction(); }
-            else { StopJetParticle(); }
-        }
+
 
         //--Pump control--
 
@@ -121,6 +120,17 @@ public class JetPackPlayer : MonoBehaviour
         if (revEngineDown) { EngineRevAction(); }
     }
 
+
+    void PackUpdate()
+    {
+        if (engineUp)
+        {
+            if (rightJet && leftJet) { UpPackAction(); }
+            else if (rightJet) { RightPackAction(); }
+            else if (leftJet) { LeftPackAction(); }
+            else { StopJetParticle(); }
+        }
+    }
 
     // Function RightPackAction()
     // Manage what does the character when the player uses his right Jet
@@ -135,7 +145,7 @@ public class JetPackPlayer : MonoBehaviour
             firstRight = false;
         }
 
-        rb_.AddForce(new Vector2(accelerationX, accelerationY));
+        rb_.AddForce(new Vector2(accelerationX , accelerationY));
     }
 
     // Function LeftPackAction()
