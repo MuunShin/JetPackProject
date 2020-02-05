@@ -785,6 +785,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4656667088141262761, guid: dc15013fded398a4a87b75f6de9cee02,
+        type: 3}
+      propertyPath: orthographic
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4656667088141262763, guid: dc15013fded398a4a87b75f6de9cee02,
         type: 3}
       propertyPath: m_Name
@@ -803,7 +808,7 @@ PrefabInstance:
     - target: {fileID: 4656667088141262766, guid: dc15013fded398a4a87b75f6de9cee02,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -10
+      value: -23
       objectReference: {fileID: 0}
     - target: {fileID: 4656667088141262766, guid: dc15013fded398a4a87b75f6de9cee02,
         type: 3}
