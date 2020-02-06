@@ -19416,6 +19416,14 @@ MonoBehaviour:
   revWindow: 3
   hitTaken: 0
   offsetCam: 2
+  maxHeat: 0
+  heatGainRatio: 0
+  heatLossRatio: 0
+  critHeatGainRatio: 0
+  gauge: {fileID: 0}
+  explodeSpeedX: 0
+  explodeSpeedY: 0
+  explodeSpeedUp: 0
 --- !u!50 &231008358603598612
 Rigidbody2D:
   serializedVersion: 4

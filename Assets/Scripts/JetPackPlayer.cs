@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class JetPackPlayer : MonoBehaviour
 {
@@ -64,6 +65,38 @@ public class JetPackPlayer : MonoBehaviour
     [Tooltip("Must be the same as the camera")]
     [SerializeField]
     float offsetCam;
+
+    [Header("Overheat ")]
+    [Tooltip("Maximum heat you can manage")]
+    [SerializeField]
+    float maxHeat;
+    [Tooltip("Heat gained per frame of active jet")]
+    [SerializeField]
+    float heatGainRatio;
+    [Tooltip("Heat lost per frame of inactive jet")]
+    [SerializeField]
+    float heatLossRatio;
+
+    [Tooltip("Critcal Heat gain per frame passed during critical heat")]
+    [SerializeField]
+    float critHeatGainRatio;
+    [Tooltip("Critcal Heat gain per frame passed during critical heat")]
+    [SerializeField]
+    Image gauge;
+    float actualHeat;
+
+    [Tooltip("Horizontal speed when exploding left or right")]
+    [SerializeField]
+    public float explodeSpeedX;
+    [Tooltip("Vertical speed when exploding left or right")]
+    [SerializeField]
+    public float explodeSpeedY;
+    [Tooltip("Vertical speed when exploding up")]
+    [SerializeField]
+    public float explodeSpeedUp;
+
+    bool criticalHeat;
+    float lastHeat;
     //------------------------//
     //       Functions        //
     //------------------------//
@@ -79,6 +112,7 @@ public class JetPackPlayer : MonoBehaviour
         effRev = GameObject.Find("Eff_Rev").GetComponent<ParticleSystem>();
         effEngineOn = GameObject.Find("Eff_EngineOn").GetComponent<ParticleSystem>();
         engineUp = false;
+        
     }
 
 
@@ -86,10 +120,12 @@ public class JetPackPlayer : MonoBehaviour
     void Update()
     {
         InputUpdate();
-        CapSpeed();
+        if (engineUp) { CapSpeed(); }
 
         if(reving) { EngineRevUpdate(); }
     }
+
+    // Update is called a fixed number of time per second based on deltaTime
 
     private void FixedUpdate()
     {
@@ -107,7 +143,7 @@ public class JetPackPlayer : MonoBehaviour
         revEngineDown = Input.GetButtonDown("RevEngine");
 
 
-        //--Jet pack controls--
+
 
 
 
@@ -121,15 +157,22 @@ public class JetPackPlayer : MonoBehaviour
     }
 
 
+    // Function PackUpdate()
+    // Updates the state of the jetpack. Must be called in Fixed update
     void PackUpdate()
     {
         if (engineUp)
         {
+            //--Jet pack controls--
+            lastHeat = actualHeat;
             if (rightJet && leftJet) { UpPackAction(); }
             else if (rightJet) { RightPackAction(); }
             else if (leftJet) { LeftPackAction(); }
-            else { StopJetParticle(); }
+            else { PackRest(); }
+
+            
         }
+        OverheatUpdate();
     }
 
     // Function RightPackAction()
@@ -143,8 +186,11 @@ public class JetPackPlayer : MonoBehaviour
             effRightPack.Play();
             firstLeft = firstUp = true;
             firstRight = false;
-        }
 
+            
+        }
+        if (actualHeat < maxHeat)
+            actualHeat += heatGainRatio;
         rb_.AddForce(new Vector2(accelerationX , accelerationY));
     }
 
@@ -160,7 +206,8 @@ public class JetPackPlayer : MonoBehaviour
             firstRight = firstUp = true;
             firstLeft = false;
         }
-
+        if (actualHeat < maxHeat)
+            actualHeat += heatGainRatio;
         rb_.AddForce(new Vector2(-accelerationX, accelerationY));
     }
 
@@ -177,12 +224,14 @@ public class JetPackPlayer : MonoBehaviour
             firstUp = false;
         }
 
+        if (actualHeat < maxHeat)
+            actualHeat += heatGainRatio*1.5f;
         rb_.AddForce(new Vector2(0, accelerationUp));
     }
 
-    // Function StopJetParticle()
-    // Stops all jet particles emmiter and resets booleans associated to them
-    void StopJetParticle()
+    // Function PackRest()
+    // Stops all jet particles emmiter and resets booleans associated to them + Apply passive heat management
+    void PackRest()
     {
         if (!firstRight || !firstLeft || !firstUp)
         {
@@ -190,9 +239,17 @@ public class JetPackPlayer : MonoBehaviour
             effLeftPack.Stop();
             effUpPack.Stop();
             firstRight = firstLeft = firstUp = true;
+
+
+        }
+        if (actualHeat > 0)
+        {
+            if (criticalHeat)
+                actualHeat += critHeatGainRatio;
+            else
+                actualHeat -= heatLossRatio;
         }
     }
-
 
     // Function PumpAction()
     // Manage what does the character when the uses his pump input
@@ -208,7 +265,7 @@ public class JetPackPlayer : MonoBehaviour
         if (!engineUp)
         { 
             if (!reving)
-            {
+            { 
                 effReving.Play();
                 revNumber = 0;
                 reving = true;
@@ -225,8 +282,19 @@ public class JetPackPlayer : MonoBehaviour
                 reving = false;
             }
         }
+        else
+        {
+
+            switch (actualHeat / maxHeat)
+            {
+                case float n when n < 0.75f: actualHeat += maxHeat/4; break;
+                default: Explode(); break;
+            }
+        }
     }
 
+    // Function EngineRevUpdate()
+    // Updates the reving state of the player if the player is starting his engine
     void EngineRevUpdate()
     {
         revTimer -= Time.deltaTime;
@@ -239,6 +307,63 @@ public class JetPackPlayer : MonoBehaviour
         }
     }
 
+    // Function OverheatUpdate()
+    // Updates the overheat mechanic and indicator
+    void OverheatUpdate()
+    {
+
+        gauge.fillAmount = Mathf.Lerp(lastHeat, actualHeat / maxHeat,1) ;
+
+
+
+        switch (actualHeat / maxHeat)
+        {
+            case float n when n >= 0.75f:
+                gauge.color = new Color(1f, 0, 0);
+                if (!criticalHeat) { criticalHeat = true; }
+                break;
+            case float n when n >= 0.5f :  gauge.color = new Color(1f, 1f, 0); break;
+            case float n when n >= 0.25f:  gauge.color = new Color(0, 0.8f, 0); break;
+            default                     :  gauge.color = new Color(0, 0.4f, 0);  break;
+        }
+
+        if(actualHeat >= maxHeat)
+        {
+            Explode();
+        }
+    }
+
+    void Explode()
+    {
+        actualHeat = 0;
+        engineUp = false;
+        criticalHeat = false;
+
+
+        
+        if(rightJet && leftJet)
+        {
+            rb_.velocity = new Vector3(rb_.velocity.x, 0);
+            rb_.AddForce(new Vector2(0, explodeSpeedUp));
+        }
+        else if (rightJet)
+        {
+            rb_.AddForce(new Vector2(explodeSpeedX, explodeSpeedY));
+        }
+        else if (leftJet)
+        {
+            rb_.AddForce(new Vector2(-explodeSpeedX, explodeSpeedY));
+        }
+        else
+        {
+            rb_.velocity = new Vector3(rb_.velocity.x, 0);
+            rb_.AddForce(new Vector2(0, explodeSpeedUp));
+        }
+
+    }
+
+    // Function CapSpeed()
+    // Caps the speed of the player
     void CapSpeed()
     {
         float ySpeed = rb_.velocity.y;
@@ -275,19 +400,25 @@ public class JetPackPlayer : MonoBehaviour
 
     }
 
+    // Function CapSpeed() returns a boolean
+    // Tells if the player is ascending
     public bool Rising()
     {
         
         return (rb_.velocity.y > speedCapY / offsetCam);
     }
 
+    // Function Falling() returns a boolean
+    // Tells if the player is falling
     public bool Falling()
     {
-        Debug.Log(offsetCam);
+
         return (rb_.velocity.y < -(floatCap / offsetCam));
 
     }
 
+    // Function rbVelocityY() returns a float
+    // returns the velocity on the Y axis
     public float rbVelocityY()
     {
         return rb_.velocity.y;
