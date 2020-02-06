@@ -114,6 +114,13 @@ public class JetPackPlayer : MonoBehaviour
         engineUp = false;
         
     }
+    
+    // TEMPORAIRE
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Wall")
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
 
 
     // Update is called once per frame
