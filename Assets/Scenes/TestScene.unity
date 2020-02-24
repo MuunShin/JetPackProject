@@ -636,8 +636,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519978848}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 7.0468, y: 1.795715, z: 0.49}
-  m_LocalScale: {x: 125.36, y: 40.303, z: 1}
+  m_LocalPosition: {x: 7.0468, y: 1.7957, z: 0.49}
+  m_LocalScale: {x: 318.10098, y: 167.79752, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 14
@@ -2888,6 +2888,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 596573303256481094, guid: 72330141854f4fc4dae31b1295ea44b8,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2602511373530061290, guid: 72330141854f4fc4dae31b1295ea44b8,
         type: 3}
       propertyPath: m_Name
@@ -2991,7 +2996,7 @@ PrefabInstance:
     - target: {fileID: 6074579024244566024, guid: 72330141854f4fc4dae31b1295ea44b8,
         type: 3}
       propertyPath: heatGainRatio
-      value: 1.3
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6074579024244566024, guid: 72330141854f4fc4dae31b1295ea44b8,
         type: 3}
@@ -3021,7 +3026,7 @@ PrefabInstance:
     - target: {fileID: 6074579024244566024, guid: 72330141854f4fc4dae31b1295ea44b8,
         type: 3}
       propertyPath: critHeatGainRatio
-      value: 0.5
+      value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: 6074579024244566024, guid: 72330141854f4fc4dae31b1295ea44b8,
         type: 3}
