@@ -33,7 +33,19 @@ public class CameraScript : MonoBehaviour
 
     [SerializeField]
     [Tooltip("Target of the Camera")]
-    float lerpForce;
+    float lerpForceY;
+
+    [SerializeField]
+    [Tooltip("Target of the Camera")]
+    float lerpForceX;
+
+    [SerializeField]
+    [Tooltip("Target of the Camera")]
+    float offSetX;
+
+    [SerializeField]
+    [Tooltip("Target of the Camera")]
+    float deadZone;
 
     [SerializeField]
     [Tooltip("Offset for when your player is rising or falling")]
@@ -76,16 +88,19 @@ public class CameraScript : MonoBehaviour
         {
 
             Debug.Log(" Y+");
-            targetY = targetY + targetPlayer.rbVelocityY() - (targetPlayer.speedCapY / offsetCam);
+            targetY = targetY + targetPlayer.RbVelocityY() - (targetPlayer.speedCapY / offsetCam);
         }
         if (targetPlayer.Falling())
         {
 
             Debug.Log(" Gravity");
-            targetY = targetY + targetPlayer.rbVelocityY() + (targetPlayer.floatCap / offsetCam);
+            targetY = targetY + targetPlayer.RbVelocityY() + (targetPlayer.floatCap / offsetCam);
         }
 
-        activeCamera.transform.position = new Vector3 (Mathf.Lerp(cameraX,targetX,lerpForce*Time.deltaTime), Mathf.Lerp(cameraY, targetY, lerpForce*Time.deltaTime), activeCamera.transform.position.z);
+
+        targetX = targetX + (targetPlayer.RbVelocityX() * 0.5f);
+
+        activeCamera.transform.position = new Vector3 (Mathf.Lerp(cameraX,targetX,lerpForceX*Time.deltaTime), Mathf.Lerp(cameraY, targetY, lerpForceY*Time.deltaTime), activeCamera.transform.position.z);
     }
     void MarioLikeUpdate()
     {

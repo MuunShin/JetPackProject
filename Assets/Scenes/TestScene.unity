@@ -2879,6 +2879,46 @@ PrefabInstance:
       propertyPath: offsetCam
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 5607354558011722773, guid: dc15013fded398a4a87b75f6de9cee02,
+        type: 3}
+      propertyPath: lerpForceX
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5607354558011722773, guid: dc15013fded398a4a87b75f6de9cee02,
+        type: 3}
+      propertyPath: lerpForceY
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5607354558011722773, guid: dc15013fded398a4a87b75f6de9cee02,
+        type: 3}
+      propertyPath: offSetX
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5607354558011722773, guid: dc15013fded398a4a87b75f6de9cee02,
+        type: 3}
+      propertyPath: deadZoneX
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5607354558011722773, guid: dc15013fded398a4a87b75f6de9cee02,
+        type: 3}
+      propertyPath: forceX
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5607354558011722773, guid: dc15013fded398a4a87b75f6de9cee02,
+        type: 3}
+      propertyPath: lerpForceXCen
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5607354558011722773, guid: dc15013fded398a4a87b75f6de9cee02,
+        type: 3}
+      propertyPath: lerpForceXOff
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5607354558011722773, guid: dc15013fded398a4a87b75f6de9cee02,
+        type: 3}
+      propertyPath: deadZone
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dc15013fded398a4a87b75f6de9cee02, type: 3}
 --- !u!1001 &6074579023639736285
@@ -3033,6 +3073,31 @@ PrefabInstance:
       propertyPath: speedGauge
       value: 
       objectReference: {fileID: 1003877228}
+    - target: {fileID: 6074579024244566024, guid: 72330141854f4fc4dae31b1295ea44b8,
+        type: 3}
+      propertyPath: accelBoostY
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6074579024244566024, guid: 72330141854f4fc4dae31b1295ea44b8,
+        type: 3}
+      propertyPath: accelBoostX
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6074579024244566024, guid: 72330141854f4fc4dae31b1295ea44b8,
+        type: 3}
+      propertyPath: accelBoostUp
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 6074579024244566024, guid: 72330141854f4fc4dae31b1295ea44b8,
+        type: 3}
+      propertyPath: speedCapYB
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 6074579024244566024, guid: 72330141854f4fc4dae31b1295ea44b8,
+        type: 3}
+      propertyPath: speedCapXB
+      value: 17
+      objectReference: {fileID: 0}
     - target: {fileID: 6074579024244566025, guid: 72330141854f4fc4dae31b1295ea44b8,
         type: 3}
       propertyPath: m_Name
