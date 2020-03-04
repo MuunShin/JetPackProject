@@ -74,18 +74,34 @@ public class JetPackPlayer : MonoBehaviour
     [Tooltip("Horizontal speed cap boosted")]
     public float speedCapXB;
 
-    bool isBoosting;
-    float actualCapX, actualCapY;
+    [Tooltip("The added force while boosting Up")]
+    [SerializeField]
+    private float speedCollisionMalus;
 
     [Tooltip("Must be the same as the camera")]
     [SerializeField]
     private float offsetCam;
 
-
-    [Tooltip("Heat Gauge")]
+    [Header("Boost ")]
+    [Tooltip("Boost Gauge")]
     [SerializeField]
     private Image gauge;
-    private float actualHeat;
+    [Tooltip("Boost Gauge")]
+    [SerializeField]
+    private Image stockGauge;
+    [Tooltip("Boost max")]
+    [SerializeField]
+    private float maxBoost;
+    [Tooltip("Boost ratio")]
+    [SerializeField]
+    private float boostRatioGain;
+    [Tooltip("Boost ratio")]
+    [SerializeField]
+    private float boostRatioLoss;
+
+    private float actualBoost, boostStock;
+    bool isBoosting, lockedBoost, nearWall;
+    float actualCapX, actualCapY;
 
     //------------------------//
     //       Functions        //
@@ -100,14 +116,8 @@ public class JetPackPlayer : MonoBehaviour
         effUpPack = GameObject.Find("Eff_PackUP").GetComponent<ParticleSystem>();
         actualCapX = speedCapX;
         actualCapY = speedCapY;
+        lockedBoost = false;
 
-    }
-    
-    // TEMPORAIRE
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.tag == "Wall")
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
 
@@ -123,6 +133,7 @@ public class JetPackPlayer : MonoBehaviour
     private void FixedUpdate()
     {
         PackUpdate();
+        BoostUpdate();                          
     }
     // Function InputUpdate
     // !Called in Update!  Manage inputs related to the player
@@ -160,7 +171,6 @@ public class JetPackPlayer : MonoBehaviour
         else if (rightJet) { RightPackAction();  }
         else if (leftJet) { LeftPackAction(); }
         else { PackRest();  }
-
 
         SpeedUpdate();
     }
@@ -242,7 +252,7 @@ public class JetPackPlayer : MonoBehaviour
     // Manage what does the character when the player uses his boost input
     void BoostForwardAction()
     {
-        if(!isBoosting)
+        if(!isBoosting && lockedBoost == false)
         {
             isBoosting = true;
             actualCapX = speedCapXB;
@@ -252,14 +262,39 @@ public class JetPackPlayer : MonoBehaviour
 
     void BoostForwardStop()
     {
+
+        isBoosting = false;
+        lockedBoost = false;
+        actualCapX = speedCapX;
+        actualCapY = speedCapY;
+
+    }
+
+    void BoostUpdate()
+    {
+        Debug.Log("near Wall : " + nearWall);
+        gauge.fillAmount = actualBoost / maxBoost;
+        stockGauge.fillAmount = (actualBoost +boostStock) / maxBoost;
+
         if (isBoosting)
         {
+            actualBoost -= boostRatioLoss;
+        }
+
+        if (actualBoost <= 0)
+        {
+            actualBoost = 0;
             isBoosting = false;
             actualCapX = speedCapX;
             actualCapY = speedCapY;
+            lockedBoost = true;
+        }
+
+        if ((boostStock < maxBoost) && nearWall)
+        {
+            boostStock += boostRatioGain * (actualSpeed / 10);
         }
     }
-
 
     void SpeedUpdate()
     {
@@ -296,6 +331,34 @@ public class JetPackPlayer : MonoBehaviour
 
         rb_.velocity = new Vector2(xSpeed, ySpeed);
 
+    }
+
+    public void BoostChargeStart()
+    {
+        boostStock = 0;
+        nearWall = true;
+    }
+    public void BoostChargeStop()
+    {
+        actualBoost += boostStock;
+        if (boostStock > maxBoost)
+            actualBoost = maxBoost;
+
+        lockedBoost = false;
+
+        nearWall = false;
+        boostStock = 0;
+    }
+
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Wall")
+        {
+            rb_.velocity = new Vector2(rb_.velocity.x - (rb_.velocity.x / speedCollisionMalus), rb_.velocity.y - (rb_.velocity.y / speedCollisionMalus));
+            boostStock = 0;
+            nearWall = false;
+        }
     }
 
     // Function CapSpeed() returns a boolean

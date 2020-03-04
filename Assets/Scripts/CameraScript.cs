@@ -33,6 +33,10 @@ public class CameraScript : MonoBehaviour
 
     [SerializeField]
     [Tooltip("Target of the Camera")]
+    float yTargetCap;
+
+    [SerializeField]
+    [Tooltip("Target of the Camera")]
     float lerpForceY;
 
     [SerializeField]
@@ -82,19 +86,21 @@ public class CameraScript : MonoBehaviour
 
     void CenterLerpUpdate()
     {
-        
+        float yTargetSpeed = targetPlayer.RbVelocityY();
+
+        if (yTargetSpeed > yTargetCap)
+            yTargetSpeed = yTargetCap;
 
         if (targetPlayer.Rising())
         {
 
-            Debug.Log(" Y+");
-            targetY = targetY + targetPlayer.RbVelocityY() - (targetPlayer.speedCapY / offsetCam);
+            targetY = targetY + yTargetSpeed - (targetPlayer.speedCapY / offsetCam);
         }
         if (targetPlayer.Falling())
         {
 
-            Debug.Log(" Gravity");
-            targetY = targetY + targetPlayer.RbVelocityY() + (targetPlayer.floatCap / offsetCam);
+
+            targetY = targetY + yTargetSpeed + (targetPlayer.floatCap / offsetCam);
         }
 
 
