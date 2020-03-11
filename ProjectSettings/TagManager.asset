@@ -6,6 +6,9 @@ TagManager:
   tags:
   - Wall
   - BoostCollider
+  - Breakable
+  - Wind
+  - BoostPad
   layers:
   - Default
   - TransparentFX
@@ -15,9 +18,9 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
-  - 
+  - Breakable
+  - BoostTriggerBox
+  - SpeedPad
   - 
   - 
   - 

@@ -57,22 +57,6 @@ public class JetPackPlayer : MonoBehaviour
     private float actualSpeed,tmpCap;
 
     [Header("Gameplay ")]
-    [Tooltip("The added force while boosting horizontally")]
-    [SerializeField]
-    private float accelBoostX;
-    [Tooltip("The added force while boosting vertically")]
-    [SerializeField]
-    private float accelBoostY;
-    [Tooltip("The added force while boosting Up")]
-    [SerializeField]
-    private float accelBoostUp;
-
-    [Tooltip("Upward vertical speed cap boosted")]
-    [SerializeField]
-    public float speedCapYB;
-    [SerializeField]
-    [Tooltip("Horizontal speed cap boosted")]
-    public float speedCapXB;
 
     [Tooltip("The added force while boosting Up")]
     [SerializeField]
@@ -92,6 +76,21 @@ public class JetPackPlayer : MonoBehaviour
     [Tooltip("Boost max")]
     [SerializeField]
     private float maxBoost;
+    [Tooltip("The added force while boosting horizontally")]
+    [SerializeField]
+    private float accelBoostX;
+    [Tooltip("The added force while boosting vertically")]
+    [SerializeField]
+    private float accelBoostY;
+    [Tooltip("The added force while boosting Up")]
+    [SerializeField]
+    private float accelBoostUp;
+    [Tooltip("Upward vertical speed cap boosted")]
+    [SerializeField]
+    public float speedCapYB;
+    [SerializeField]
+    [Tooltip("Horizontal speed cap boosted")]
+    public float speedCapXB;
     [Tooltip("Boost ratio")]
     [SerializeField]
     private float boostRatioGain;
@@ -99,8 +98,47 @@ public class JetPackPlayer : MonoBehaviour
     [SerializeField]
     private float boostRatioLoss;
 
-    private float actualBoost, boostStock;
-    bool isBoosting, lockedBoost, nearWall;
+    [Header("WallBreak")]
+    [Tooltip("Boost Gauge")]
+    [SerializeField]
+    private float wallBreakSpeedBest;
+    [Tooltip("Boost Gauge")]
+    [SerializeField]
+    private float wallBreakSpeedSlow;
+
+    [Header("Speed Pads")]
+    [Tooltip("Boost Gauge")]
+    [SerializeField]
+    private float speedPadX;
+    [Tooltip("Boost Gauge")]
+    [SerializeField]
+    private float speedPadY;
+    [Tooltip("Boost Gauge")]
+    [SerializeField]
+    private AnimationCurve curve;
+    [Tooltip("Boost Gauge")]
+    [SerializeField]
+    private float speedPadAccelAdd;
+
+    [Header("Wind")]
+    [Tooltip("The added force while boosting horizontally")]
+    [SerializeField]
+    private float accelWindX;
+    [Tooltip("The added force while boosting vertically")]
+    [SerializeField]
+    private float accelWindY;
+    [Tooltip("The added force while boosting Up")]
+    [SerializeField]
+    private float accelWindUp;
+    [Tooltip("Upward vertical speed cap boosted")]
+    [SerializeField]
+    public float speedCapYWind;
+    [SerializeField]
+    [Tooltip("Horizontal speed cap boosted")]
+    public float speedCapXWind;
+
+    private float actualBoost, boostStock, position;
+    bool isBoosting, lockedBoost, nearWall, winded, speedPadBoost;
     float actualCapX, actualCapY;
 
     //------------------------//
@@ -117,6 +155,7 @@ public class JetPackPlayer : MonoBehaviour
         actualCapX = speedCapX;
         actualCapY = speedCapY;
         lockedBoost = false;
+        speedPadBoost = false;
 
     }
 
@@ -189,11 +228,20 @@ public class JetPackPlayer : MonoBehaviour
             
         }
 
+        float tmpAccelX = accelerationX;
+        float tmpAccelY = accelerationY;
 
-        if(isBoosting)
-            rb_.AddForce(new Vector2(accelerationX + accelBoostX, accelerationY + accelBoostY));
-        else
-            rb_.AddForce(new Vector2(accelerationX , accelerationY));
+        if (winded)
+        {
+            tmpAccelX += accelWindX;
+            tmpAccelY += accelWindY;
+        }
+        if (isBoosting)
+        {
+            tmpAccelX += accelBoostX;
+            tmpAccelY += accelBoostY;
+        }
+        rb_.AddForce(new Vector2(tmpAccelX , tmpAccelY));
     }
 
     // Function LeftPackAction()
@@ -209,10 +257,20 @@ public class JetPackPlayer : MonoBehaviour
             firstLeft = false;
         }
 
+        float tmpAccelX = accelerationX;
+        float tmpAccelY = accelerationY;
+
+        if (winded)
+        {
+            tmpAccelX += accelWindX;
+            tmpAccelY += accelWindY;
+        }
         if (isBoosting)
-            rb_.AddForce(new Vector2(-accelerationX - accelBoostX, accelerationY + accelBoostY));
-        else
-            rb_.AddForce(new Vector2(-accelerationX, accelerationY));
+        {
+            tmpAccelX += accelBoostX;
+            tmpAccelY += accelBoostY;
+        }
+        rb_.AddForce(new Vector2(-tmpAccelX, tmpAccelY));
     }
 
     // Function UpPackAction()
@@ -228,10 +286,18 @@ public class JetPackPlayer : MonoBehaviour
             firstUp = false;
         }
 
+
+        float tmpAccelUp = accelerationUp;
+
+        if (winded)
+        {
+            tmpAccelUp += accelWindUp;
+        }
         if (isBoosting)
-            rb_.AddForce(new Vector2(0, accelerationUp + accelBoostUp));
-        else
-            rb_.AddForce(new Vector2(0, accelerationUp));
+        {
+            tmpAccelUp += accelBoostUp;
+        }
+        rb_.AddForce(new Vector2(0, tmpAccelUp));
     }
 
     // Function PackRest()
@@ -258,6 +324,7 @@ public class JetPackPlayer : MonoBehaviour
             actualCapX = speedCapXB;
             actualCapY = speedCapYB;
         }
+
     }
 
     void BoostForwardStop()
@@ -267,7 +334,6 @@ public class JetPackPlayer : MonoBehaviour
         lockedBoost = false;
         actualCapX = speedCapX;
         actualCapY = speedCapY;
-
     }
 
     void BoostUpdate()
@@ -281,7 +347,7 @@ public class JetPackPlayer : MonoBehaviour
             actualBoost -= boostRatioLoss;
         }
 
-        if (actualBoost <= 0)
+        if (actualBoost <= 0 && isBoosting)
         {
             actualBoost = 0;
             isBoosting = false;
@@ -300,7 +366,7 @@ public class JetPackPlayer : MonoBehaviour
     {
         actualSpeed = rb_.velocity.magnitude;
 
-        speedGauge.fillAmount = actualSpeed / 15;
+        speedGauge.fillAmount = actualSpeed / 25;
     }
 
     // Function CapSpeed()
@@ -312,7 +378,7 @@ public class JetPackPlayer : MonoBehaviour
 
         if (ySpeed > actualCapY)
         {
-            ySpeed = Mathf.Lerp(ySpeed,actualCapY,0.1f);
+            ySpeed = Mathf.Lerp(ySpeed,actualCapY,0.004f);
         }
 
         if (ySpeed < -floatCap)
@@ -322,11 +388,11 @@ public class JetPackPlayer : MonoBehaviour
 
         if (xSpeed > actualCapX)
         {
-            xSpeed = Mathf.Lerp(xSpeed, actualCapX, 0.1f); 
+            xSpeed = Mathf.Lerp(xSpeed, actualCapX, 0.004f); 
         }
         else if (xSpeed < -actualCapX)
         {
-            xSpeed = Mathf.Lerp(xSpeed, -actualCapX, 0.1f); 
+            xSpeed = Mathf.Lerp(xSpeed, -actualCapX, 0.004f); 
         }
 
         rb_.velocity = new Vector2(xSpeed, ySpeed);
@@ -360,6 +426,51 @@ public class JetPackPlayer : MonoBehaviour
             nearWall = false;
         }
     }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Breakable")
+        {
+            if (actualSpeed > wallBreakSpeedBest)
+            {
+                collision.gameObject.GetComponent<BreakWall>().Destruction();
+            }
+            else if (actualSpeed > wallBreakSpeedSlow)
+            {
+                collision.gameObject.GetComponent<BreakWall>().Destruction();
+                rb_.velocity = new Vector2(rb_.velocity.x - (rb_.velocity.x / speedCollisionMalus), rb_.velocity.y - (rb_.velocity.y / speedCollisionMalus));
+            }
+
+        }
+
+        if (collision.gameObject.tag == "Wind")
+        {
+            winded = true;
+            actualCapX += speedCapXWind;
+            actualCapY += speedCapYWind;
+        }
+
+        if (collision.gameObject.tag == "BoostPad")
+        {
+
+            if (!speedPadBoost)
+            {
+                speedPadBoost = true;
+                StartCoroutine("SpeedPadAccel");
+            }
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Wind")
+        {
+            winded = false;
+            actualCapX -= speedCapXWind;
+            actualCapY -= speedCapYWind;
+        }
+    }
+
 
     // Function CapSpeed() returns a boolean
     // Tells if the player is ascending
@@ -395,4 +506,24 @@ public class JetPackPlayer : MonoBehaviour
             return rb_.velocity.normalized.x;
     }
 
+    IEnumerator SpeedPadAccel()
+    {
+        Debug.Log("yeet");
+        float speedBoost;
+        while (position < 1)
+        {
+            position += speedPadAccelAdd;
+            speedBoost = curve.Evaluate(position);
+
+            rb_.AddForce(new Vector2(rb_.velocity.normalized.x * (speedBoost * speedPadX), rb_.velocity.normalized.y * (speedBoost * speedPadY)));
+            yield return null;
+        }
+        position = 0;
+        speedPadBoost = false;
+        StopCoroutine("SpeedPadAccel");
+
+
+    }
+
+    //rb_.AddForce(new Vector2(rb_.velocity.normalized.x* speedPadX, rb_.velocity.normalized.y* speedPadY));
 }
