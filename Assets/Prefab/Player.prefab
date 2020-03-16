@@ -221,7 +221,7 @@ ParticleSystem:
   ringBufferLoopRange: {x: 0, y: 1}
   looping: 1
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   useRigidbodyForVelocity: 1
@@ -5093,20 +5093,34 @@ MonoBehaviour:
   accelerationY: 10
   accelerationUp: 27
   speedGauge: {fileID: 0}
-  accelBoostX: 7
-  accelBoostY: 0
-  accelBoostUp: 13
-  speedCapYB: 13
-  speedCapXB: 15
   speedCollisionMalus: 2
   offsetCam: 2
   gauge: {fileID: 0}
   stockGauge: {fileID: 0}
   maxBoost: 200
+  accelBoostX: 7
+  accelBoostY: 0
+  accelBoostUp: 13
+  speedCapYB: 13
+  speedCapXB: 15
   boostRatioGain: 1
   boostRatioLoss: 3
   wallBreakSpeedBest: 0
   wallBreakSpeedSlow: 0
+  speedPadX: 0
+  speedPadY: 0
+  curve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  speedPadAccelAdd: 0
+  accelWindX: 0
+  accelWindY: 0
+  accelWindUp: 0
+  speedCapYWind: 0
+  speedCapXWind: 0
 --- !u!50 &231008358603598612
 Rigidbody2D:
   serializedVersion: 4
@@ -5192,7 +5206,7 @@ ParticleSystem:
   ringBufferLoopRange: {x: 0, y: 1}
   looping: 1
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   useRigidbodyForVelocity: 1

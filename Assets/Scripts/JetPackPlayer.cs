@@ -148,6 +148,8 @@ public class JetPackPlayer : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
+
         rb_ = GetComponent<Rigidbody2D>();
         effRightPack = GameObject.Find("Eff_PackR").GetComponent<ParticleSystem>();
         effLeftPack = GameObject.Find("Eff_PackL").GetComponent<ParticleSystem>();
@@ -172,7 +174,9 @@ public class JetPackPlayer : MonoBehaviour
     private void FixedUpdate()
     {
         PackUpdate();
-        BoostUpdate();                          
+        BoostUpdate();
+        if (speedPadBoost)
+            SpeedPadAccel();
     }
     // Function InputUpdate
     // !Called in Update!  Manage inputs related to the player
@@ -338,7 +342,6 @@ public class JetPackPlayer : MonoBehaviour
 
     void BoostUpdate()
     {
-        Debug.Log("near Wall : " + nearWall);
         gauge.fillAmount = actualBoost / maxBoost;
         stockGauge.fillAmount = (actualBoost +boostStock) / maxBoost;
 
@@ -407,7 +410,7 @@ public class JetPackPlayer : MonoBehaviour
     public void BoostChargeStop()
     {
         actualBoost += boostStock;
-        if (boostStock > maxBoost)
+        if (actualBoost > maxBoost)
             actualBoost = maxBoost;
 
         lockedBoost = false;
@@ -419,12 +422,14 @@ public class JetPackPlayer : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+
         if (collision.gameObject.tag == "Wall")
         {
             rb_.velocity = new Vector2(rb_.velocity.x - (rb_.velocity.x / speedCollisionMalus), rb_.velocity.y - (rb_.velocity.y / speedCollisionMalus));
             boostStock = 0;
             nearWall = false;
         }
+
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -456,8 +461,8 @@ public class JetPackPlayer : MonoBehaviour
             if (!speedPadBoost)
             {
                 speedPadBoost = true;
-                StartCoroutine("SpeedPadAccel");
             }
+            position = 0;
         }
     }
 
@@ -506,22 +511,20 @@ public class JetPackPlayer : MonoBehaviour
             return rb_.velocity.normalized.x;
     }
 
-    IEnumerator SpeedPadAccel()
+    private void SpeedPadAccel()
     {
-        Debug.Log("yeet");
+
         float speedBoost;
-        while (position < 1)
+        if (position < 1)
         {
             position += speedPadAccelAdd;
             speedBoost = curve.Evaluate(position);
 
             rb_.AddForce(new Vector2(rb_.velocity.normalized.x * (speedBoost * speedPadX), rb_.velocity.normalized.y * (speedBoost * speedPadY)));
-            yield return null;
-        }
-        position = 0;
-        speedPadBoost = false;
-        StopCoroutine("SpeedPadAccel");
 
+        }
+        else
+            speedPadBoost = false;
 
     }
 

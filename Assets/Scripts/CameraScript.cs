@@ -22,6 +22,9 @@ public class CameraScript : MonoBehaviour
     Camera activeCamera;
 
     [SerializeField]
+    GameManager gameManager;
+
+    [SerializeField]
     [Tooltip("CenterLerp : Super Meat Boy Style\r\nMarioLike : BorderCaps")]
     CameraModes CameraMode;
 
@@ -86,27 +89,31 @@ public class CameraScript : MonoBehaviour
 
     void CenterLerpUpdate()
     {
-        float yTargetSpeed = targetPlayer.RbVelocityY();
-
-        if (yTargetSpeed > yTargetCap)
-            yTargetSpeed = yTargetCap;
-
-        if (targetPlayer.Rising())
+        if (!gameManager.startup)
         {
+            float yTargetSpeed = targetPlayer.RbVelocityY();
 
-            targetY = targetY + yTargetSpeed - (targetPlayer.speedCapY / offsetCam);
+
+            if (yTargetSpeed > yTargetCap)
+                yTargetSpeed = yTargetCap;
+
+            if (targetPlayer.Rising())
+            {
+
+                targetY = targetY + yTargetSpeed - (targetPlayer.speedCapY / offsetCam);
+            }
+            if (targetPlayer.Falling())
+            {
+
+
+                targetY = targetY + yTargetSpeed + (targetPlayer.floatCap / offsetCam);
+            }
+
+
+            targetX = targetX + (targetPlayer.RbVelocityX() * 0.5f);
+
+            activeCamera.transform.position = new Vector3 (Mathf.Lerp(cameraX,targetX,lerpForceX*Time.deltaTime), Mathf.Lerp(cameraY, targetY, lerpForceY*Time.deltaTime), activeCamera.transform.position.z);
         }
-        if (targetPlayer.Falling())
-        {
-
-
-            targetY = targetY + yTargetSpeed + (targetPlayer.floatCap / offsetCam);
-        }
-
-
-        targetX = targetX + (targetPlayer.RbVelocityX() * 0.5f);
-
-        activeCamera.transform.position = new Vector3 (Mathf.Lerp(cameraX,targetX,lerpForceX*Time.deltaTime), Mathf.Lerp(cameraY, targetY, lerpForceY*Time.deltaTime), activeCamera.transform.position.z);
     }
     void MarioLikeUpdate()
     {
