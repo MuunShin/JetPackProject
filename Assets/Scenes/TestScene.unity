@@ -452,6 +452,12 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 51
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &175438575 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 175438575, guid: d7f32bf4a179aec4798bcd590f68df23,
+    type: 3}
+  m_PrefabInstance: {fileID: 3903734215925277205}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &245524924 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3903734216019528617, guid: d7f32bf4a179aec4798bcd590f68df23,
@@ -10093,6 +10099,31 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     vectorLabel1_3: W
+--- !u!1 &296191621 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4656667088141262763, guid: dc15013fded398a4a87b75f6de9cee02,
+    type: 3}
+  m_PrefabInstance: {fileID: 4656667087714955994}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &296191625
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 296191621}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 01c6687b8bcc73b468059d3966633e75, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &397905227
 GameObject:
   m_ObjectHideFlags: 0
@@ -62419,6 +62450,11 @@ PrefabInstance:
       propertyPath: lapCount
       value: 
       objectReference: {fileID: 245524924}
+    - target: {fileID: 929661693242170634, guid: 038b8c2a5bbdaf6459f1d524a446cf65,
+        type: 3}
+      propertyPath: CanvasAnim
+      value: 
+      objectReference: {fileID: 175438575}
     - target: {fileID: 929661693242170635, guid: 038b8c2a5bbdaf6459f1d524a446cf65,
         type: 3}
       propertyPath: m_Name
@@ -62732,6 +62768,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Canvas
       objectReference: {fileID: 0}
+    - target: {fileID: 5347147194703265371, guid: d7f32bf4a179aec4798bcd590f68df23,
+        type: 3}
+      propertyPath: m_Color.a
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d7f32bf4a179aec4798bcd590f68df23, type: 3}
 --- !u!1001 &4038355500963252595
@@ -62818,12 +62859,22 @@ PrefabInstance:
     - target: {fileID: 4656667088141262761, guid: dc15013fded398a4a87b75f6de9cee02,
         type: 3}
       propertyPath: orthographic
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4656667088141262761, guid: dc15013fded398a4a87b75f6de9cee02,
         type: 3}
       propertyPath: field of view
       value: 80
+      objectReference: {fileID: 0}
+    - target: {fileID: 4656667088141262761, guid: dc15013fded398a4a87b75f6de9cee02,
+        type: 3}
+      propertyPath: orthographic size
+      value: 7.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4656667088141262761, guid: dc15013fded398a4a87b75f6de9cee02,
+        type: 3}
+      propertyPath: m_FOVAxisMode
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4656667088141262763, guid: dc15013fded398a4a87b75f6de9cee02,
         type: 3}

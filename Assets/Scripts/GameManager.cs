@@ -27,6 +27,10 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     Text lapCount;
 
+    [Tooltip("Text where tiemer goes")]
+    [SerializeField]
+    Animator CanvasAnim;
+
     float chronoSec, chronoMin, chronoCentiSec, lapSec, lapMin, lapCentiSec, timer, lapTime;
     string chronoMinS, chronoSecS, chronoCentiS, lapMinS, lapSecS, lapCentiS, lapDisplay;
     bool finished = false;
@@ -84,6 +88,7 @@ public class GameManager : MonoBehaviour
                 timer = 0;
                 realStartup = true;
                 Debug.Log("3");
+                CanvasAnim.SetTrigger("CDTrigger");
             }
         }
         else
