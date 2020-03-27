@@ -138,6 +138,7 @@ public class GameManager : MonoBehaviour
         else
         {
             pauseSeclected.Select();
+            pauseSeclected.OnSelect(null);
 
             Player.Paused(true);
             Time.timeScale = 0f;
@@ -296,6 +297,7 @@ public class GameManager : MonoBehaviour
                 lapFinishNoB.text = GetBestLap();
                 timeFinishNoB.text = GetTime();
                 homeSelected.Select();
+                homeSelected.OnSelect(null);
                 break;
         }
 
@@ -304,6 +306,7 @@ public class GameManager : MonoBehaviour
     private void BestScoreUiUpdate()
     {
         okSelected.Select();
+        okSelected.OnSelect(null);
         lapFinishB.text = GetBestLap();
         timeFinishB.text = GetTime();
         CanvasAnim.SetTrigger("BestScore");
@@ -316,6 +319,7 @@ public class GameManager : MonoBehaviour
         CanvasAnim.SetTrigger("BestScoreNext");
 
         homeSelected.Select();
+        homeSelected.OnSelect(null);
 
     }
 

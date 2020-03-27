@@ -32,6 +32,7 @@ public class MenuManager : MonoBehaviour
             uiTitle.SetActive(false);
             uiMain.SetActive(true);
             firstSelected.Select();
+            firstSelected.OnSelect(null);
             PlayerPrefs.SetInt("fromLevel", 0);
         }
     }
@@ -48,6 +49,7 @@ public class MenuManager : MonoBehaviour
                     uiTitle.SetActive(false);
                     uiMain.SetActive(true);
                     firstSelected.Select();
+                    firstSelected.OnSelect(null);
                 }
                 break;
             case UiState.Main:
