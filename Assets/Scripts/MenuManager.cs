@@ -31,7 +31,7 @@ public class MenuManager : MonoBehaviour
             uiState = UiState.Main;
             uiTitle.SetActive(false);
             uiMain.SetActive(true);
-            eS.SetSelectedGameObject(firstSelected.gameObject);
+            firstSelected.Select();
             PlayerPrefs.SetInt("fromLevel", 0);
         }
     }
@@ -47,7 +47,7 @@ public class MenuManager : MonoBehaviour
                     uiState = UiState.Main;
                     uiTitle.SetActive(false);
                     uiMain.SetActive(true);
-                    eS.SetSelectedGameObject(firstSelected.gameObject);
+                    firstSelected.Select();
                 }
                 break;
             case UiState.Main:

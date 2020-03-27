@@ -137,7 +137,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            eS.SetSelectedGameObject(pauseSeclected.gameObject);
+            pauseSeclected.Select();
 
             Player.Paused(true);
             Time.timeScale = 0f;
@@ -295,7 +295,7 @@ public class GameManager : MonoBehaviour
                 CanvasAnim.SetTrigger("NoBestScore");
                 lapFinishNoB.text = GetBestLap();
                 timeFinishNoB.text = GetTime();
-                eS.SetSelectedGameObject(homeSelected.gameObject);
+                homeSelected.Select();
                 break;
         }
 
@@ -303,8 +303,7 @@ public class GameManager : MonoBehaviour
 
     private void BestScoreUiUpdate()
     {
-        eS.SetSelectedGameObject(okSelected.gameObject);
-        homeSelected.image.sprite = homeSelected.spriteState.highlightedSprite;
+        okSelected.Select();
         lapFinishB.text = GetBestLap();
         timeFinishB.text = GetTime();
         CanvasAnim.SetTrigger("BestScore");
@@ -316,8 +315,8 @@ public class GameManager : MonoBehaviour
         name.text = inputName.text;
         CanvasAnim.SetTrigger("BestScoreNext");
 
-        eS.SetSelectedGameObject(homeSelected.gameObject);
-        homeSelected.image.sprite = homeSelected.spriteState.highlightedSprite;
+        homeSelected.Select();
+
     }
 
     public void RestartScene()

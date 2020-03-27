@@ -193,7 +193,10 @@ public class JetPackPlayer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        InputUpdate();
+        if (!paused)
+        {
+            InputUpdate();
+        }
         CapSpeed();
     }
 
@@ -201,7 +204,7 @@ public class JetPackPlayer : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!paused) { PackUpdate(); }
+        PackUpdate();
         BoostUpdate();
         if (speedPadBoost)
             SpeedPadAccel();
