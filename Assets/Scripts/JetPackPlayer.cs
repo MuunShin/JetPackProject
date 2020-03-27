@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
+
 
 public class JetPackPlayer : MonoBehaviour
 {
@@ -138,14 +138,24 @@ public class JetPackPlayer : MonoBehaviour
     public float speedCapXWind;
 
     private float actualBoost, boostStock, position;
-    bool isBoosting, lockedBoost, nearWall, winded, speedPadBoost;
-    float actualCapX, actualCapY;
+    bool isBoosting, lockedBoost, nearWall, winded, speedPadBoost,paused;
+    float actualCapX, actualCapY, normX, normY;
+
+    AudioSource jet, boost, boostCharge, boostMax, bunk, speedPad, bumper, wallBreak;
+
+    [SerializeField]
+    AudioClip jetClassic, jetActivate;
 
     //------------------------//
     //       Functions        //
     //------------------------//
 
     // Start is called before the first frame update
+    private void OnDisable()
+    {
+        jet.Stop();
+    }
+
     void Start()
     {
 
@@ -159,8 +169,26 @@ public class JetPackPlayer : MonoBehaviour
         lockedBoost = false;
         speedPadBoost = false;
 
+        jet = transform.Find("SoundEmmiter").Find("jet").GetComponent<AudioSource>();
+        boost = transform.Find("SoundEmmiter").Find("boost").GetComponent<AudioSource>();
+        boostCharge = transform.Find("SoundEmmiter").Find("boostCharge").GetComponent<AudioSource>();
+        bunk = transform.Find("SoundEmmiter").Find("bunk").GetComponent<AudioSource>();
+        speedPad = transform.Find("SoundEmmiter").Find("speedPad").GetComponent<AudioSource>();
+        wallBreak = transform.Find("SoundEmmiter").Find("wallBreak").GetComponent<AudioSource>();
+        bumper = transform.Find("SoundEmmiter").Find("bumper").GetComponent<AudioSource>();
+        boostMax = transform.Find("SoundEmmiter").Find("boostMax").GetComponent<AudioSource>();
     }
 
+    public void Paused(bool pause)
+    {
+        paused = pause;
+        switch(pause)
+        {
+            case true: jet.Stop(); break;
+            case false: jet.Play(); break;
+        }
+        
+    }
 
     // Update is called once per frame
     void Update()
@@ -173,7 +201,7 @@ public class JetPackPlayer : MonoBehaviour
 
     private void FixedUpdate()
     {
-        PackUpdate();
+        if (!paused) { PackUpdate(); }
         BoostUpdate();
         if (speedPadBoost)
             SpeedPadAccel();
@@ -191,6 +219,12 @@ public class JetPackPlayer : MonoBehaviour
 
         revEngineDown = Input.GetButtonDown("RevEngine");
         revEngineUp = Input.GetButtonUp("RevEngine");
+
+        if (Input.GetButtonDown("pauseButton"))
+        {
+            
+        }
+            
 
 
         //--Pump control--
@@ -214,6 +248,24 @@ public class JetPackPlayer : MonoBehaviour
         else if (rightJet) { RightPackAction();  }
         else if (leftJet) { LeftPackAction(); }
         else { PackRest();  }
+
+        if ((rightJet || leftJet) && !jet.isPlaying)
+        {
+            jet.Play();
+        }
+
+        if (isBoosting && jet.clip != jetActivate)
+        {
+
+            jet.clip = jetActivate;
+            jet.Play();
+        }
+
+        if (!isBoosting && jet.clip != jetClassic)
+        {
+            jet.clip = jetClassic;
+            jet.Play();
+        }
 
         SpeedUpdate();
     }
@@ -314,6 +366,8 @@ public class JetPackPlayer : MonoBehaviour
             effLeftPack.Stop();
             effUpPack.Stop();
             firstRight = firstLeft = firstUp = true;
+
+
         }
 
     }
@@ -324,9 +378,15 @@ public class JetPackPlayer : MonoBehaviour
     {
         if(!isBoosting && lockedBoost == false)
         {
+            
             isBoosting = true;
             actualCapX = speedCapXB;
             actualCapY = speedCapYB;
+
+            if(gauge.fillAmount != 0)
+            {
+                boost.Play();
+            }
         }
 
     }
@@ -361,7 +421,9 @@ public class JetPackPlayer : MonoBehaviour
 
         if ((boostStock < maxBoost) && nearWall)
         {
+
             boostStock += boostRatioGain * (actualSpeed / 10);
+            boostCharge.pitch = stockGauge.fillAmount;
         }
     }
 
@@ -370,6 +432,7 @@ public class JetPackPlayer : MonoBehaviour
         actualSpeed = rb_.velocity.magnitude;
 
         speedGauge.fillAmount = actualSpeed / 25;
+        jet.pitch = actualSpeed / 25; 
     }
 
     // Function CapSpeed()
@@ -406,13 +469,18 @@ public class JetPackPlayer : MonoBehaviour
     {
         boostStock = 0;
         nearWall = true;
+        boostCharge.Play();
     }
     public void BoostChargeStop()
     {
+        boostCharge.Stop();
         actualBoost += boostStock;
         if (actualBoost > maxBoost)
+        {
             actualBoost = maxBoost;
+            boostMax.Play();
 
+        }
         lockedBoost = false;
 
         nearWall = false;
@@ -428,6 +496,8 @@ public class JetPackPlayer : MonoBehaviour
             rb_.velocity = new Vector2(rb_.velocity.x - (rb_.velocity.x / speedCollisionMalus), rb_.velocity.y - (rb_.velocity.y / speedCollisionMalus));
             boostStock = 0;
             nearWall = false;
+            boostCharge.Stop();
+            bunk.Play();
         }
 
     }
@@ -439,11 +509,13 @@ public class JetPackPlayer : MonoBehaviour
             if (actualSpeed > wallBreakSpeedBest)
             {
                 collision.gameObject.GetComponent<BreakWall>().Destruction();
+                wallBreak.Play();
             }
             else if (actualSpeed > wallBreakSpeedSlow)
             {
                 collision.gameObject.GetComponent<BreakWall>().Destruction();
                 rb_.velocity = new Vector2(rb_.velocity.x - (rb_.velocity.x / speedCollisionMalus), rb_.velocity.y - (rb_.velocity.y / speedCollisionMalus));
+                wallBreak.Play();
             }
 
         }
@@ -461,6 +533,9 @@ public class JetPackPlayer : MonoBehaviour
             if (!speedPadBoost)
             {
                 speedPadBoost = true;
+                speedPad.Play();
+                normX = collision.transform.right.normalized.x;
+                normY = collision.transform.right.normalized.y;
             }
             position = 0;
         }
@@ -520,7 +595,7 @@ public class JetPackPlayer : MonoBehaviour
             position += speedPadAccelAdd;
             speedBoost = curve.Evaluate(position);
 
-            rb_.AddForce(new Vector2(rb_.velocity.normalized.x * (speedBoost * speedPadX), rb_.velocity.normalized.y * (speedBoost * speedPadY)));
+            rb_.AddForce(new Vector2(normX * (speedBoost * speedPadX), normY * (speedBoost * speedPadY)));
 
         }
         else

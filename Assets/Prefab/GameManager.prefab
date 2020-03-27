@@ -30,7 +30,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 50.000004, y: -30.000002, z: 0}
 --- !u!114 &929661693242170634
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -43,9 +43,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a50cf7eaa7147d34690ff87d6b0107b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  actualLevel: 6
   Player: {fileID: 0}
   finishLine: {fileID: 0}
   timerRace: {fileID: 0}
   timerLaps: {fileID: 0}
   lapCount: {fileID: 0}
+  pos: {fileID: 0}
+  timeFinishB: {fileID: 0}
+  lapFinishB: {fileID: 0}
+  timeFinishNoB: {fileID: 0}
+  lapFinishNoB: {fileID: 0}
+  name: {fileID: 0}
+  inputName: {fileID: 0}
+  _LBManager: {fileID: 0}
+  CanvasAnim: {fileID: 0}
+  CountDown: {fileID: 0}
+  okSelected: {fileID: 0}
+  homeSelected: {fileID: 0}
+  eS: {fileID: 0}
+  sound: {fileID: 0}
+  uiSound: {fileID: 0}
+  mapTheme: {fileID: 8300000, guid: cbe9b1cae4a044d4dbab428c302337b1, type: 3}
+  finish: {fileID: 8300000, guid: 8cc7228564a718e4399559fb698825e9, type: 3}
+  selctUi: {fileID: 8300000, guid: 3889de00e1198bf42a974c4ae4e2003f, type: 3}
+  pressedUi: {fileID: 8300000, guid: 2287b5c1d8bbdf34cad63f6fa1a5e056, type: 3}
   startup: 1

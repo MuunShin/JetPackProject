@@ -25,8 +25,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 304070786182560681}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.5046834, y: 1.0224049, z: 0.100000024}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1.3007303, y: 1.1751782, z: 1}
   m_Children: []
   m_Father: {fileID: 304070786284410737}
@@ -71,7 +71,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 10676ab5b03846f4491e6845c034eced, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 2271160d50b80a84c9b6dc9633f1fbf0, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -91,7 +91,7 @@ Animation:
   m_GameObject: {fileID: 304070786182560681}
   m_Enabled: 1
   serializedVersion: 3
-  m_Animation: {fileID: 7400000, guid: ed03522c80b8d0e4fa27f03b19cbfa0f, type: 2}
+  m_Animation: {fileID: 7400000, guid: 77da54b8b23c16746bde6481f51e6163, type: 2}
   m_Animations: []
   m_WrapMode: 0
   m_PlayAutomatically: 1
@@ -110,7 +110,7 @@ GameObject:
   - component: {fileID: 304070786284410739}
   - component: {fileID: 304070786284410736}
   m_Layer: 10
-  m_Name: WindZone 1
+  m_Name: WindZone
   m_TagString: BoostPad
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -123,7 +123,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 304070786284410740}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -3.648, y: 10.56, z: -1}
   m_LocalScale: {x: 0.7687989, y: 0.85093474, z: 1}
   m_Children:
@@ -152,7 +152,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.49413908, y: 1.0209125}
+  m_Offset: {x: 0.0012769699, y: -0.0014768839}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -163,7 +163,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1.9047463, y: 1.7218974}
+  m_Size: {x: 1.8947439, y: 1.6820128}
   m_EdgeRadius: 0
 --- !u!95 &304070786284410736
 Animator:
@@ -175,7 +175,7 @@ Animator:
   m_GameObject: {fileID: 304070786284410740}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 3046cbff7e06a0c458b1dd8aad415f7b, type: 2}
+  m_Controller: {fileID: 9100000, guid: 3b8c84e748fbf8b4dbc87094fbd3be31, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

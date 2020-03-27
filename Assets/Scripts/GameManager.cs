@@ -2,9 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    [Tooltip("LevelNb")]
+    public int actualLevel;
+
     [Header("Gameplay Elements")]
     [Tooltip("Player")]
     [SerializeField]
@@ -29,20 +34,59 @@ public class GameManager : MonoBehaviour
 
     [Tooltip("Text where tiemer goes")]
     [SerializeField]
+    Text pos, timeFinishB, lapFinishB, timeFinishNoB, lapFinishNoB, name;
+
+    [Tooltip("Text where tiemer goes")]
+    [SerializeField]
+    InputField inputName;
+
+    [Tooltip("Text where tiemer goes")]
+    [SerializeField]
+    LeaderBoardManager _LBManager;
+
+    [Tooltip("Text where tiemer goes")]
+    [SerializeField]
     Animator CanvasAnim;
 
-    float chronoSec, chronoMin, chronoCentiSec, lapSec, lapMin, lapCentiSec, timer, lapTime;
-    string chronoMinS, chronoSecS, chronoCentiS, lapMinS, lapSecS, lapCentiS, lapDisplay;
+    [Tooltip("Text where tiemer goes")]
+    [SerializeField]
+    AudioSource CountDown;
+
+    [SerializeField]
+    Button okSelected,homeSelected, pauseSeclected;
+
+    [SerializeField]
+    GameObject pauseMenu;
+
+    [SerializeField]
+    EventSystem eS;
+
+
+    [Header("Sound")]
+    [SerializeField]
+    AudioSource sound;
+    [SerializeField]
+    AudioSource uiSound;
+
+    [SerializeField]
+    AudioClip mapTheme, finish, selctUi, pressedUi;
+
+    float chronoSec, chronoMin, chronoCentiSec, lapSec, lapMin, lapCentiSec, timer, lapTime, bestLapTime, bLapMin, bLapSec, bLapCenti;
+    string chronoMinS, chronoSecS, chronoCentiS, lapMinS, lapSecS, lapCentiS, bLapTime, lapDisplay;
     bool finished = false;
     public bool startup = true;
-    bool realStartup;
+    bool realStartup,paused;
     int countdown = 0;
     ArrayList lapTimerAL;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+
+
+        timerRace.text = "00:00:00";
+        timerLaps.text = "1 : 00:00:00";
+        bestLapTime = 99999999;
         lapTimerAL = new ArrayList();
         if (finishLine.raceMode == FinishLine.FinishType.Tour)
         {
@@ -50,7 +94,9 @@ public class GameManager : MonoBehaviour
             lapCount.text = finishLine.actualLap + "/" + finishLine.lapAmount;
 
         }
+        _LBManager.ReadScoreTxt(6);
     }
+
 
 
     // Update is called once per frame
@@ -61,10 +107,15 @@ public class GameManager : MonoBehaviour
             StartupUpdate();
         }
         if (!finished && !startup)
-            ChronoUpdate();
+        {
+            if (Input.GetButtonDown("pauseButton"))
+                paused = startPause();
 
-        timerRace.text = GetTime();
-        if (finishLine.raceMode == FinishLine.FinishType.Tour)
+            ChronoUpdate();
+            timerRace.text = GetTime();
+        }
+  
+        if (finishLine.raceMode == FinishLine.FinishType.Tour && !startup)
         {
             lapDisplay = "";
             foreach(string lap in lapTimerAL)
@@ -73,6 +124,31 @@ public class GameManager : MonoBehaviour
             }
             timerLaps.text = lapDisplay;
         }
+    }
+
+    public bool startPause()
+    {
+        if (Time.timeScale == 0f)
+        {
+            Player.Paused(false);
+            Time.timeScale = 1f;
+            pauseMenu.SetActive(false);
+            return (false);
+        }
+        else
+        {
+            eS.SetSelectedGameObject(pauseSeclected.gameObject);
+
+            Player.Paused(true);
+            Time.timeScale = 0f;
+            pauseMenu.SetActive(true);
+            return (true);
+        }
+    }
+
+    public void togglePause()
+    {
+        paused = startPause();
     }
 
     void StartupUpdate()
@@ -89,6 +165,7 @@ public class GameManager : MonoBehaviour
                 realStartup = true;
                 Debug.Log("3");
                 CanvasAnim.SetTrigger("CDTrigger");
+                CountDown.Play();
             }
         }
         else
@@ -109,6 +186,10 @@ public class GameManager : MonoBehaviour
                         Debug.Log("GO");
                         startup = false;
                         Player.enabled = true;
+
+                        sound.clip = mapTheme;
+                        sound.loop = true;
+                        sound.Play();
 
                         break;
                     default:
@@ -178,14 +259,88 @@ public class GameManager : MonoBehaviour
     public void FinishGame()
     {
         Player.enabled = false;
-        Debug.Log("Finish");
-        Debug.Log("afficher fin de jeu");
+        CanvasAnim.SetTrigger("EndTrigger");
 
+        sound.clip = finish;
+        sound.loop = true;
+        sound.Play();
+
+        switch (_LBManager.Placed(chronoMin, chronoSec, chronoCentiSec, actualLevel))
+        {
+            case 1:
+                pos.text = "1st";
+                BestScoreUiUpdate();
+                break;
+            case 2:
+                pos.text = "2nd";
+                BestScoreUiUpdate();
+                break;
+            case 3:
+                pos.text = "3rd";
+                BestScoreUiUpdate();
+                break;
+            case 4:
+                pos.text = "4th";
+                BestScoreUiUpdate();
+                break;
+            case 5:
+                pos.text = "5th";
+                BestScoreUiUpdate();
+                break;
+            case 6:
+                pos.text = "6th";
+                BestScoreUiUpdate();
+                break;
+            default:
+                CanvasAnim.SetTrigger("NoBestScore");
+                lapFinishNoB.text = GetBestLap();
+                timeFinishNoB.text = GetTime();
+                eS.SetSelectedGameObject(homeSelected.gameObject);
+                break;
+        }
+
+    }
+
+    private void BestScoreUiUpdate()
+    {
+        eS.SetSelectedGameObject(okSelected.gameObject);
+        homeSelected.image.sprite = homeSelected.spriteState.highlightedSprite;
+        lapFinishB.text = GetBestLap();
+        timeFinishB.text = GetTime();
+        CanvasAnim.SetTrigger("BestScore");
+    }
+
+    public void ValidateInput()
+    {
+        _LBManager.AddScore(inputName.text,chronoMin,chronoSec,chronoCentiSec,bLapMin,bLapSec,bLapCenti,actualLevel);
+        name.text = inputName.text;
+        CanvasAnim.SetTrigger("BestScoreNext");
+
+        eS.SetSelectedGameObject(homeSelected.gameObject);
+        homeSelected.image.sprite = homeSelected.spriteState.highlightedSprite;
+    }
+
+    public void RestartScene()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void HomeScene()
+    {
+        Time.timeScale = 1f;
+        PlayerPrefs.SetInt("fromLevel", actualLevel);
+        SceneManager.LoadScene("MainMenu");
     }
 
     string GetTimeLap()
     {
         return lapMinS + ":" + lapSecS + ":" + lapCentiS;
+    }
+
+    string GetBestLap()
+    {
+        return bLapTime;
     }
 
     string GetTime()
@@ -195,6 +350,16 @@ public class GameManager : MonoBehaviour
 
     public void LapCount()
     {
+        if(bestLapTime > lapTime)
+        {
+            bestLapTime = lapTime;
+            bLapMin = lapMin;
+            bLapSec = lapSec;
+            bLapCenti = lapCentiSec;
+            bLapTime = GetTimeLap();
+            Debug.Log(GetTimeLap());
+            Debug.Log(GetBestLap());
+        }
         lapTime = 0;
         lapTimerAL.Add(finishLine.actualLap + " : " + GetTimeLap());
         lapCount.text = finishLine.actualLap + "/" + finishLine.lapAmount;
@@ -205,5 +370,9 @@ public class GameManager : MonoBehaviour
     {
         finished = true;
 
+    }
+    private void OnApplicationQuit()
+    {
+        PlayerPrefs.SetInt("fromLevel", 0);
     }
 }

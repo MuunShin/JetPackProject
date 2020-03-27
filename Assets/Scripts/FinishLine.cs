@@ -25,11 +25,16 @@ public class FinishLine : MonoBehaviour
     public CheckPoint[] checkPointArray;
 
     GameObject player;
+    AudioSource sound;
+
+    [SerializeField]
+    AudioClip lap, finish;
 
     // Start is called before the first frame update
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
+        sound = transform.Find("AudioLap").GetComponent<AudioSource>();
     }
 
 
@@ -79,12 +84,17 @@ public class FinishLine : MonoBehaviour
 
                             if (lapAmount <= actualLap)
                             {
+                                sound.clip = finish;
+                                sound.Play();
                                 Finish();
                             }
                             else
                             {
 
                                 actualLap++;
+
+                                sound.clip = lap;
+                                sound.Play();
 
                                 foreach (CheckPoint ch in checkPointArray)
                                 {
